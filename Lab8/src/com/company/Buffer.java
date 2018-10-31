@@ -11,7 +11,7 @@ public class Buffer {
         Object[] objects = map.keySet().toArray();
         for (int i = 0; i < objects.length - 1; i++) {
             if (objects[i].equals(index)) {
-                try (RandomAccessFile randomAccessFile = new RandomAccessFile("Stock.txt", "rw")) {
+                try (RandomAccessFile randomAccessFile = new RandomAccessFile("Stock.dat", "rw")) {
                     int j = i - 1;
                     randomAccessFile.seek(map.get(objects[j]));
                     byte[] b = new byte[1024];
@@ -38,8 +38,8 @@ public class Buffer {
         Object[] objects = map.keySet().toArray();
         for (int i = 0; i < objects.length; i++) {
             if (objects[i].equals(index)) {
-                try (RandomAccessFile randomAccessFile = new RandomAccessFile("Stock.txt", "rw")) {
-                    int j = i + 1;
+                try (RandomAccessFile randomAccessFile = new RandomAccessFile("Stock.dat", "rw")) {
+                    int j = i - 1;
                     randomAccessFile.seek(map.get(objects[j]));
                     byte[] b = new byte[1024];
                     randomAccessFile.read(b);
@@ -66,7 +66,7 @@ public class Buffer {
     static void removeByIndex(Object index, Map<Object, Long> users) {
         for (var entry : users.entrySet()) {
             if (entry.getKey().equals(index)) {
-                try (RandomAccessFile randomAccessFile = new RandomAccessFile("Stock.txt", "rw")) {
+                try (RandomAccessFile randomAccessFile = new RandomAccessFile("Stock.dat", "rw")) {
                     randomAccessFile.seek(entry.getValue());
                     byte[] array = new byte[1024];
                     randomAccessFile.read(array);
@@ -83,7 +83,7 @@ public class Buffer {
 
     static Map<Object, Long> write(ArrayList<Stock> magazine) {
         Map<Object, Long> map = new HashMap<>();
-        try (RandomAccessFile randomAccessFile = new RandomAccessFile("Stock.txt", "rw")) {
+        try (RandomAccessFile randomAccessFile = new RandomAccessFile("Stock.dat", "rw")) {
             for (Stock record : magazine) {
                 long dataPointer = randomAccessFile.getFilePointer();
                 map.put(record.getField(), dataPointer);
@@ -97,7 +97,7 @@ public class Buffer {
 
     static Stock read(Object index, Map<Object, Long> magazine) {
         Long dataPointer = magazine.get(index);
-        try (RandomAccessFile randomAccessFile = new RandomAccessFile("Stock.txt", "rw")) {
+        try (RandomAccessFile randomAccessFile = new RandomAccessFile("Stock.dat", "rw")) {
             randomAccessFile.seek(dataPointer);
             byte[] array = new byte[1024];
             randomAccessFile.read(array);
